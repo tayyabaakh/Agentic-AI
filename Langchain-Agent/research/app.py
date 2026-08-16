@@ -149,7 +149,7 @@ import streamlit as st
 
 from dotenv import load_dotenv
 
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_groq import ChatGroq
 from langchain.tools import tool
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain.agents import create_agent
@@ -268,7 +268,7 @@ os.environ["SSL_CERT_FILE"] = certifi.where()
 
 load_dotenv()
 
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
 
@@ -277,8 +277,8 @@ WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
 # CHECK API KEYS
 # ============================================================
 
-if not GOOGLE_API_KEY:
-    st.error("❌ GOOGLE_API_KEY is missing from your .env file.")
+if not GROQ_API_KEY:
+    st.error("❌ GROQ_API_KEY is missing from your .env file.")
     st.stop()
 
 if not TAVILY_API_KEY:
@@ -342,10 +342,12 @@ def create_research_agent():
         max_results=3
     )
 
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-3.1-flash-lite",
-        google_api_key=GOOGLE_API_KEY,
+    llm = ChatGroq(
+    model="llama-3.3-70b-versatile",
+    temperature=0,
+    api_key=GROQ_API_KEY
     )
+
 
     tools = [
         search_tool,
